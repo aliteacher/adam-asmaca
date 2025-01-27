@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Asmaca</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Adam Asmaca</h1>
+         <!-- İpucu gösteren kategori bölümü -->
+         <p>Kategori: <span id="category-hint">?</span></p>
+        <div id="word-container"></div>
+        <p>Skor: <span id="score">0</span></p> <!-- Skorun gösterileceği yer -->
+        <input type="text" id="letter-input" maxlength="1" placeholder="Harf gir">
+        <button id="guess-btn">Tahmin Et</button>
+        <button id="restart-btn">Yeniden Başlat</button> <!-- Yeniden başlatma butonu -->
+        <p id="message"></p>
+        <div id="hangman-draw"></div>
+        <p>Yanlış tahminler: <span id="wrong-letters"></span></p>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

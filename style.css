@@ -1,0 +1,87 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #edf6c6;
+    margin: 0;
+    padding: 0;
+}
+
+.game-container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: #f1f66c;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+#word-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap; /* Alt satıra geçmesini engeller */
+    font-size: 2em; /* Varsayılan font boyutunu büyüt */
+    min-width: 300px; /* Minimum genişlik ver */
+    width: 100%; /* Alanın genişliğini %100 yaparak ekran boyutuna uyum sağla */
+    text-align: center; /* Ortalamak için */
+}
+
+#letter-input {
+    font-size: 1.2rem;
+    padding: 10px;
+    width: 100px;
+    text-align: center;
+}
+
+#guess-btn {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#message {
+    font-size: 1.2rem;
+    color: red;
+    margin-top: 10px;
+}
+
+#hangman-draw {
+    font-size: 1.5rem;
+    margin: 20px 0;
+    white-space: pre;
+}
+
+#wrong-letters {
+    color: red;
+    font-weight: bold;
+}
+
+/* Yeni Buton ve Stil */
+#restart-btn {
+    font-size: 1.2rem;
+    padding: 10px 20px;
+    margin-top: 15px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#restart-btn:hover {
+    background-color: #218838;
+}
+
+#score {
+    font-size: 1.5rem;
+    color: #007bff;
+    font-weight: bold;
+}
+#category-hint {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #007BFF;
+    margin-top: 10px;
+    display: block;
+}

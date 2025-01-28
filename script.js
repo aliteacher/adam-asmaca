@@ -6,12 +6,16 @@ const wordsByCategory = {
                  "INTERESTED", "ENJOYABLE", "ENTERTAINING", "FUNNY", 
                  "ABSURD", "PLEASANT", "GREAT", "FRIENDLY", "FRIGHTENING", 
                  "TERRIBLE", "HONEST", "HELPFUL", "BEAUTIFUL", "UGLY", 
-                 "STRONG", "BRAVE", "QUIET", "YOUNG", "GIANT", "HORRIBLE"]
+                 "STRONG", "BRAVE", "QUIET", "YOUNG", "GIANT", "HORRIBLE"],
+    Animals: ["ELEPHANT", "TIGER", "LION", "KANGAROO", "DOLPHIN", 
+              "PENGUIN", "CROCODILE", "FLAMINGO", "RHINOCEROS", "GIRAFFE"],
+    Cities: ["ISTANBUL", "LONDON", "PARIS", "TOKYO", "BERLIN", 
+             "ROME", "NEWYORK", "MOSCOW", "DUBAI", "BEIJING"]
 };
 
 let selectedWord, selectedCategory, guessedLetters, wrongGuesses;
 let score = 0;
-const maxWrongGuesses = 6;
+const maxWrongGuesses = 7;
 
 const wordContainer = document.getElementById("word-container");
 const letterInput = document.getElementById("letter-input");
@@ -27,7 +31,7 @@ const categoryHint = document.getElementById("category-hint");
 function startGame() {
     const categories = Object.keys(wordsByCategory); // Kategorileri al
     selectedCategory = categories[Math.floor(Math.random() * categories.length)]; // Rastgele kategori seç
-    const wordList = wordsByCategory[selectedCategory]; // Kategorideki kelimeleri al
+    const wordList = wordsByCategory[selectedCategory]; // Seçilen kategorideki kelimeleri al
     selectedWord = wordList[Math.floor(Math.random() * wordList.length)]; // Rastgele kelime seç
 
     guessedLetters = [];
@@ -53,19 +57,86 @@ function displayWord() {
     wordContainer.innerHTML = display;
 }
 
-// Adamın çizimini güncelle
 function updateHangman() {
     const hangmanStages = [
-        "  \n  \n  \n  \n___",
-        "  O \n  \n  \n  \n___",
-        "  O \n  | \n  \n  \n___",
-        "  O \n /| \n  \n  \n___",
-        "  O \n /|\\ \n  \n  \n___",
-        "  O \n /|\\ \n / \n  \n___",
-        "  O \n /|\\ \n / \\ \n  \n___"
+        `
+          +---+
+              |
+              |
+              |
+              |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+              |
+              |
+              |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+          O   |
+              |
+              |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+          O   |
+          |   |
+              |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+          O   |
+         /|   |
+              |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+          O   |
+         /|\\  |
+              |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+          O   |
+         /|\\  |
+         /    |
+              |
+        =========
+        `,
+        `
+          +---+
+          |   |
+          O   |
+         /|\\  |
+         / \\  |
+              |
+        =========
+        `
     ];
-    hangmanDraw.innerHTML = hangmanStages[wrongGuesses];
+
+    // Hangi aşamada olduğunu belirlemek için wrongGuesses kullanıyoruz.
+    hangmanDraw.innerHTML = `<pre>${hangmanStages[wrongGuesses]}</pre>`;
 }
+
 
 // Harf kontrolü ve oyunun durumu
 function checkGuess(guess) {

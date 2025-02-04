@@ -1,25 +1,13 @@
 const wordsByCategory = {
-    Movies: ["SCIENCEFICTION", "HORROR", "THRILLER", "ADVENTURE", "ACTION", 
-             "COMEDY", "FANTASY", "ANIMATION", "ROMANTIC", "MUSICAL", 
-             "WESTERN", "FAIRY TALE", "CARTOON", "DOCUMENTARY"],
-    Adjectives: ["BORING", "BORED", "EXCITING", "EXCITED", "INTERESTING", 
-                 "INTERESTED", "ENJOYABLE", "ENTERTAINING", "FUNNY", 
-                 "ABSURD", "PLEASANT", "GREAT", "FRIENDLY", "FRIGHTENING", 
-                 "TERRIBLE", "HONEST", "HELPFUL", "BEAUTIFUL", "UGLY", 
-                 "STRONG", "BRAVE", "QUIET", "YOUNG", "GIANT", "HORRIBLE"],
-    Animals: ["ELEPHANT", "TIGER", "LION", "KANGAROO", "DOLPHIN", 
-              "PENGUIN", "CROCODILE", "FLAMINGO", "RHINOCEROS", "GIRAFFE"],
-    Cities: ["ISTANBUL", "LONDON", "PARIS", "TOKYO", "BERLIN", 
-             "ROME", "NEWYORK", "MOSCOW", "DUBAI", "BEIJING"]
+    Movies: ["SCIENCEFICTION", "HORROR", "THRILLER", "ADVENTURE", "ACTION", "WESTERN", "ANIMATION", "CRIME", "CARTOON", "MUSICAL"],
+    Adjectives: ["BORING", "BORED", "EXCITING", "EXCITED", "INTERESTING"],
 };
 
 let selectedWord, selectedCategory, guessedLetters, wrongGuesses;
 let score = 0;
-const maxWrongGuesses = 7;
+const maxWrongGuesses = 6;
 
 const wordContainer = document.getElementById("word-container");
-const letterInput = document.getElementById("letter-input");
-const guessBtn = document.getElementById("guess-btn");
 const restartBtn = document.getElementById("restart-btn");
 const message = document.getElementById("message");
 const wrongLetters = document.getElementById("wrong-letters");
@@ -27,29 +15,42 @@ const hangmanDraw = document.getElementById("hangman-draw");
 const scoreDisplay = document.getElementById("score");
 const categoryHint = document.getElementById("category-hint");
 
-// Oyunu başlatma fonksiyonu
+// 📌 Klavyeyi oluşturma fonksiyonu
+function createKeyboard() {
+    const keyboardContainer = document.getElementById("keyboard");
+    keyboardContainer.innerHTML = ""; // Önceki klavyeyi temizle
+
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ- ".split(""); // Harfler + boşluk
+
+    letters.forEach(letter => {
+        const button = document.createElement("button");
+        button.innerText = letter === " " ? "SPACE" : letter;
+        button.classList.add("key-button");
+        button.onclick = () => checkGuess(letter);
+        keyboardContainer.appendChild(button);
+    });
+}
+
+// 📌 Oyunu başlatma fonksiyonu
 function startGame() {
-    const categories = Object.keys(wordsByCategory); // Kategorileri al
-    selectedCategory = categories[Math.floor(Math.random() * categories.length)]; // Rastgele kategori seç
-    const wordList = wordsByCategory[selectedCategory]; // Seçilen kategorideki kelimeleri al
-    selectedWord = wordList[Math.floor(Math.random() * wordList.length)]; // Rastgele kelime seç
+    const categories = Object.keys(wordsByCategory);
+    selectedCategory = categories[Math.floor(Math.random() * categories.length)];
+    const wordList = wordsByCategory[selectedCategory];
+    selectedWord = wordList[Math.floor(Math.random() * wordList.length)];
 
     guessedLetters = [];
     wrongGuesses = 0;
     wrongLetters.innerText = "";
     message.innerText = "";
-    letterInput.value = "";
-    letterInput.focus();
-    guessBtn.disabled = false;
-
-    // Kategori ipucunu göster
+    score = 0;  // Skoru sıfırla
     categoryHint.innerText = selectedCategory;
 
-    displayWord(); // Kelimeyi göster
-    updateHangman(); // Çizimi sıfırla
+    displayWord();
+    updateHangman();
+    createKeyboard();
 }
 
-// Kelimeyi göster
+// 📌 Kelimeyi göster
 function displayWord() {
     let display = selectedWord.split('').map(letter => 
         guessedLetters.includes(letter) ? letter : "_"
@@ -57,104 +58,25 @@ function displayWord() {
     wordContainer.innerHTML = display;
 }
 
+// 📌 Adam Asmaca Çizimi
 function updateHangman() {
-    const hangmanStages = [
-        `
-          +---+
-              |
-              |
-              |
-              |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-              |
-              |
-              |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-          O   |
-              |
-              |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-          O   |
-          |   |
-              |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-          O   |
-         /|   |
-              |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-          O   |
-         /|\\  |
-              |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-          O   |
-         /|\\  |
-         /    |
-              |
-        =========
-        `,
-        `
-          +---+
-          |   |
-          O   |
-         /|\\  |
-         / \\  |
-              |
-        =========
-        `
-    ];
-
-    // Hangi aşamada olduğunu belirlemek için wrongGuesses kullanıyoruz.
+    const hangmanStages = ["", "O", "O |", "O/|", "O/|\\", "O/|\\ /", "O/|\\ /\\"];
     hangmanDraw.innerHTML = `<pre>${hangmanStages[wrongGuesses]}</pre>`;
 }
 
-
-// Harf kontrolü ve oyunun durumu
+// 📌 Harf kontrolü ve tahmin
 function checkGuess(guess) {
-    if (guess.length !== 1 || guessedLetters.includes(guess)) {
-        message.innerText = "Geçerli bir harf gir!";
-        return;
-    }
+    if (guessedLetters.includes(guess)) return;
 
     guessedLetters.push(guess);
-
     if (selectedWord.includes(guess)) {
-        message.innerText = `Doğru tahmin! (${selectedCategory} kategorisi)`;
-        score += 10; // Doğru tahmin 10 puan
+        message.innerText = "Doğru!";
+        score += 10;
     } else {
-        message.innerText = `Yanlış tahmin! (${selectedCategory} kategorisi)`;
+        message.innerText = "Yanlış!";
         wrongGuesses++;
         wrongLetters.innerText += guess + " ";
-        score -= 5; // Yanlış tahmin 5 puan kaybı
+        score -= 5;
     }
 
     displayWord();
@@ -164,35 +86,28 @@ function checkGuess(guess) {
     checkGameOver();
 }
 
-// Oyunun bitip bitmediğini kontrol et
+// 📌 Oyunun bitip bitmediğini kontrol et
 function checkGameOver() {
     if (!wordContainer.innerText.includes("_")) {
-        message.innerText = "Tebrikler! Kazandın!";
-        guessBtn.disabled = true;
+        message.innerText = "Kazandın!";
+        disableKeyboard();
     }
 
     if (wrongGuesses >= maxWrongGuesses) {
         message.innerText = `Kaybettin! Kelime: ${selectedWord}`;
-        guessBtn.disabled = true;
+        disableKeyboard();
     }
 }
 
-// Buton ve klavye olaylarını dinle
-guessBtn.addEventListener("click", () => {
-    let guess = letterInput.value.toUpperCase();
-    letterInput.value = "";
-    checkGuess(guess);
-});
+// 📌 Klavyeyi devre dışı bırak
+function disableKeyboard() {
+    document.querySelectorAll(".key-button").forEach(button => {
+        button.disabled = true;
+    });
+}
 
-// Klavyeden harf girildiğinde otomatik kontrol
-document.addEventListener("keydown", (e) => {
-    if (e.key.match(/[a-zA-Z]/) && e.key.length === 1 && !guessBtn.disabled) {
-        checkGuess(e.key.toUpperCase());
-    }
-});
-
-// Yeniden başlatma butonu
+// 📌 "Yeniden Başlat" butonu
 restartBtn.addEventListener("click", startGame);
 
-// Oyunu başlat
+// 📌 Oyunu başlat
 startGame();
